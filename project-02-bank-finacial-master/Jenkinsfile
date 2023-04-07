@@ -9,7 +9,7 @@ pipeline {
         stage('Git checkout') {
             steps {
               
-                   git 'https://github.com/SaiRevanth-J/project-02-bank-finacial.git'
+                   git 'https://github.com/Banking/.git'
             
                 }
             }
@@ -30,7 +30,7 @@ pipeline {
               steps {
                   
                   sh'sudo docker system prune -af '
-                  sh 'sudo docker build -t revanthkumar9/bank-finance:${BUILD_NUMBER}.0 .'
+                  sh 'sudo docker build -t sruthimotepalli/banking:latest .'
               
                 }
             }
@@ -38,8 +38,8 @@ pipeline {
         stage('Docker login and push') {
               steps {
                    withCredentials([string(credentialsId: 'docpass', variable: 'docpasswd')]) {
-                  sh 'sudo docker login -u revanthkumar9 -p ${docpasswd} '
-                  sh 'sudo docker push revanthkumar9/bank-finance:${BUILD_NUMBER}.0 '
+                  sh 'sudo docker login -u sruthimotepalli -p ${docpasswd} '
+                  sh 'sudo docker push sruthimotepalli/banking:${BUILD_NUMBER}.0 '
                   }
                 }
         }    
@@ -48,7 +48,7 @@ pipeline {
             steps{
 
                 dir('test-server'){
-                sh 'sudo chmod 600 DEMOKEY.pem'
+                sh 'sudo chmod 600 jenkinskey.pem'
                 sh 'terraform init'
                 sh 'terraform validate'
                 sh 'terraform apply --auto-approve'
@@ -78,7 +78,7 @@ pipeline {
             steps{
                 
                 dir('prod-server'){
-                sh 'chmod 600 DEMOKEY.pem'
+                sh 'chmod 600 jenkinskey.pem'
                 sh'terraform init'
                 sh'terraform validate'
                 sh'terraform apply --auto-approve'
